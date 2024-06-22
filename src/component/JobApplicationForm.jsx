@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import useFormValidation from "../hooks/useFormValidation";
 
 const JobApplicationForm = () => {
@@ -8,10 +8,10 @@ const JobApplicationForm = () => {
     name: "",
     email: "",
     phoneNo: "",
-    interViewTime: "",
-    releventExperience: "",
+    interviewTime: "",
+    relevantExperience: "",
     managementExperience: "",
-    portfilioUrl: "",
+    portfolioUrl: "",
     additionalSkills: {
       javascript: false,
       CSS: false,
@@ -22,36 +22,33 @@ const JobApplicationForm = () => {
     },
   });
 
-  const [errors, validate, clearError] = useFormValidation(userData);
+  const [errors, validate, clearError] = useFormValidation(userData,position);
 
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
     if (type === "checkbox") {
-      setUserData((prevUserData) => {
-        const newUserData = {
-          ...prevUserData,
-          additionalSkills: {
-            ...prevUserData.additionalSkills,
-            [name]: checked,
-          },
-        };
-        clearError(name);
-        return newUserData;
-      });
+      setUserData((prevUserData) => ({
+        ...prevUserData,
+        additionalSkills: {
+          ...prevUserData.additionalSkills,
+          [name]: checked,
+        },
+      }));
+      clearError(name);
     } else {
-      setUserData((prevUserData) => {
-        const newUserData = { ...prevUserData, [name]: value };
-        clearError(name);
-        return newUserData;
-      });
+      setUserData((prevUserData) => ({
+        ...prevUserData,
+        [name]: value,
+      }));
+      clearError(name);
     }
   };
 
-  const handelFormSubmit = (e) => {
+  const handleFormSubmit = (e) => {
     e.preventDefault();
+    console.log(userData);
     if (validate()) {
       setShowSummary(true);
-      
     } else {
       setShowSummary(false);
     }
@@ -59,15 +56,15 @@ const JobApplicationForm = () => {
 
   const closeSummary = () => {
     setShowSummary(false);
-    setPosition("null")
+    setPosition("null");
     setUserData({
       name: "",
       email: "",
       phoneNo: "",
-      interViewTime: "",
-      releventExperience: "",
+      interviewTime: "",
+      relevantExperience: "",
       managementExperience: "",
-      portfilioUrl: "",
+      portfolioUrl: "",
       additionalSkills: {
         javascript: false,
         CSS: false,
@@ -81,81 +78,57 @@ const JobApplicationForm = () => {
 
   return (
     <>
-      {showSummary == false ? (
+      {!showSummary ? (
         <div className="bg-white p-5 rounded-xl min-w-[400px]">
           <h2 className="font-bold">Job Application Form</h2>
-          <form
-            className="flex flex-col gap-2 mt-4 w-[800px] "
-            onSubmit={handelFormSubmit}
-          >
+          <form className="flex flex-col gap-2 mt-4 w-[800px]" onSubmit={handleFormSubmit}>
             <div className="flex justify-evenly gap-8">
               <div className="w-[50%]">
-                <label
-                  htmlFor=""
-                  className="flex flex-col gap-2 font-semibold text-[14px] mb-2"
-                >
+                <label htmlFor="name" className="flex flex-col gap-2 font-semibold text-[14px] mb-2">
                   Full Name
                   <input
                     required
                     name="name"
                     className="bg-gray-100 h-[40px] rounded-[5px] pl-4 outline-blue-600 text-[12px]"
                     type="text"
-                    placeholder="Enter full Name "
+                    placeholder="Enter full name"
                     value={userData.name}
                     onChange={handleInputChange}
                   />
-                  {errors.name && (
-                    <p className="text-red-500 text-[13px]">{errors.name}</p>
-                  )}
+                  {errors.name && <p className="text-red-500 text-[13px]">{errors.name}</p>}
                 </label>
-                <label
-                  htmlFor=""
-                  className="flex gap-2 flex-col font-semibold text-[14px] mb-2"
-                >
+                <label htmlFor="email" className="flex gap-2 flex-col font-semibold text-[14px] mb-2">
                   Email
                   <input
                     required
                     name="email"
                     className="bg-gray-100 h-[40px] rounded-[5px] pl-4 outline-blue-600 text-[12px]"
                     type="email"
-                    placeholder="Enter Email "
+                    placeholder="Enter email"
                     value={userData.email}
                     onChange={handleInputChange}
                   />
-                  {errors.email && (
-                    <p className="text-red-500 text-[13px]">{errors.email}</p>
-                  )}
+                  {errors.email && <p className="text-red-500 text-[13px]">{errors.email}</p>}
                 </label>
-                <label
-                  htmlFor=""
-                  className="flex gap-2 flex-col font-semibold text-[14px] mb-2"
-                >
+                <label htmlFor="phoneNo" className="flex gap-2 flex-col font-semibold text-[14px] mb-2">
                   Phone No
                   <input
                     required
                     name="phoneNo"
                     className="bg-gray-100 h-[40px] rounded-[5px] pl-4 outline-blue-600 text-[12px]"
-                    type="number"
-                    placeholder="Enter Your Age "
+                    type="text"
+                    placeholder="Enter phone number"
                     value={userData.phoneNo}
                     onChange={handleInputChange}
                   />
-                  {errors.phoneNo && (
-                    <p className="text-red-500 text-[13px]">{errors.phoneNo}</p>
-                  )}
+                  {errors.phoneNo && <p className="text-red-500 text-[13px]">{errors.phoneNo}</p>}
                 </label>
-
-                <label
-                  htmlFor="select"
-                  className="flex gap-2 flex-col font-semibold text-[14px] mb-2"
-                >
+                <label htmlFor="position" className="flex gap-2 flex-col font-semibold text-[14px] mb-2">
                   Applying for Position
                   <select
                     value={position}
                     onChange={(e) => setPosition(e.target.value)}
                     className="bg-gray-100 h-[30px] rounded-[5px] pl-4 outline-blue-600 text-[12px]"
-                    name=""
-                    id="select"
                   >
                     <option value="null">--Select--</option>
                     <option value="developer">Developer</option>
@@ -163,76 +136,62 @@ const JobApplicationForm = () => {
                     <option value="manager">Manager</option>
                   </select>
                 </label>
-
-                <label
-                  htmlFor=""
-                  className="flex gap-2 flex-col font-semibold text-[14px] mb-2"
-                >
-                  Prefered Interview Time
+                <label htmlFor="interviewTime" className="flex gap-2 flex-col font-semibold text-[14px] mb-2">
+                  Preferred Interview Time
                   <input
                     required
-                    name="interViewTime"
+                    name="interviewTime"
                     className="bg-gray-100 h-[40px] rounded-[5px] pl-4 outline-blue-600 text-[12px]"
                     type="datetime-local"
-                    placeholder="Enter Your Age "
-                    value={userData.interViewTime}
+                    value={userData.interviewTime}
                     onChange={handleInputChange}
                   />
-                  {errors.time && (
-                    <p className="text-red-500 text-[13px]">{errors.time}</p>
+                  {errors.interviewTime && (
+                    <p className="text-red-500 text-[13px]">{errors.interviewTime}</p>
                   )}
                 </label>
               </div>
-
               <div className="w-[50%]">
-                {position != "null" && position != "manager" && (
-                  <div>
+                {(position === "developer" || position === "designer") && (
+                  <>
                     <label
-                      htmlFor=""
+                      htmlFor="relevantExperience"
                       className="flex gap-2 flex-col font-semibold text-[14px] mb-2"
                     >
-                      Relevent Experience
+                      Relevant Experience
                       <input
                         required
-                        name="releventExperience"
+                        name="relevantExperience"
                         className="bg-gray-100 h-[40px] rounded-[5px] pl-4 outline-blue-600 text-[12px]"
                         type="number"
-                        placeholder="Enter Your Experience "
-                        value={userData.releventExperience}
+                        placeholder="Enter your experience"
+                        value={userData.relevantExperience}
                         onChange={handleInputChange}
                       />
-                      {errors.releventExperience && (
-                        <p className="text-red-500 text-[13px]">
-                          {errors.releventExperience}
-                        </p>
+                      {errors.relevantExperience && (
+                        <p className="text-red-500 text-[13px]">{errors.relevantExperience}</p>
                       )}
                     </label>
-                    <label
-                      htmlFor=""
-                      className="flex gap-2 flex-col font-semibold text-[14px]"
-                    >
+                    <label htmlFor="portfolioUrl" className="flex gap-2 flex-col font-semibold text-[14px] mb-2">
                       Portfolio URL
                       <input
                         required
-                        name="portfilioUrl"
+                        name="portfolioUrl"
                         className="bg-gray-100 h-[40px] rounded-[5px] pl-4 outline-blue-600 text-[12px]"
                         type="text"
-                        placeholder="Paste URL "
-                        value={userData.portfilioUrl}
+                        placeholder="Paste URL"
+                        value={userData.portfolioUrl}
                         onChange={handleInputChange}
                       />
-                      {errors.portfilioUrl && (
-                        <p className="text-red-500 text-[13px]">
-                          {errors.portfilioUrl}
-                        </p>
+                      {errors.portfolioUrl && (
+                        <p className="text-red-500 text-[13px]">{errors.portfolioUrl}</p>
                       )}
                     </label>
-                  </div>
+                  </>
                 )}
-
-                {position != "null" && position == "manager" && (
+                {position === "manager" && (
                   <label
-                    htmlFor=""
+                    htmlFor="managementExperience"
                     className="flex gap-2 flex-col font-semibold text-[14px] mb-2"
                   >
                     Management Experience
@@ -241,49 +200,39 @@ const JobApplicationForm = () => {
                       name="managementExperience"
                       className="bg-gray-100 h-[40px] rounded-[5px] pl-4 outline-blue-600 text-[12px]"
                       type="number"
-                      placeholder="Enter Your Experience "
+                      placeholder="Enter your experience"
                       value={userData.managementExperience}
                       onChange={handleInputChange}
                     />
                     {errors.managementExperience && (
-                      <p className="text-red-500 text-[13px]">
-                        {errors.managementExperience}
-                      </p>
+                      <p className="text-red-500 text-[13px]">{errors.managementExperience}</p>
                     )}
                   </label>
                 )}
-
                 <div className="flex flex-col gap-2">
                   <h3 className="font-bold text-[13px]">Additional Skills</h3>
                   <div className="flex items-center gap-4 flex-wrap">
-                    {Object.keys(userData.additionalSkills).map((skils) => (
-                      <label
-                        key={skils}
-                        htmlFor={skils}
-                        className="flex items-center justify-center gap-2 text-[15px] mb-2"
-                      >
-                        {skils}
+                    {Object.keys(userData.additionalSkills).map((skill) => (
+                      <label key={skill} htmlFor={skill} className="flex items-center justify-center gap-2 text-[15px] mb-2">
+                        {skill}
                         <input
-                          name={skils}
+                          name={skill}
                           className="w-3 h-3"
                           type="checkbox"
-                          id={skils}
-                          checked={userData.additionalSkills[skils] == true}
+                          id={skill}
+                          checked={userData.additionalSkills[skill]}
                           onChange={handleInputChange}
                         />
                       </label>
                     ))}
                     {errors.additionalSkills && (
-                      <p className="text-red-500 text-[13px]">
-                        {errors.additionalSkills}
-                      </p>
+                      <p className="text-red-500 text-[13px]">{errors.additionalSkills}</p>
                     )}
                   </div>
                 </div>
               </div>
             </div>
-
-            <button className=" text-[17px] bg-blue-500 text-white rounded-xl border-none grid place-items-center h-[30px] mt-4 w-[150px] ">
+            <button className="text-[17px] bg-blue-500 text-white rounded-xl border-none grid place-items-center h-[30px] mt-4 w-[150px]">
               Submit
             </button>
           </form>
@@ -298,57 +247,44 @@ const JobApplicationForm = () => {
           </div>
           <div className="mt-5">
             <h2 className="font-bold text-[14px]">
-              Name : <span className="text-blue-500"> {userData.name}</span>
+              Name: <span className="text-blue-500">{userData.name}</span>
             </h2>
             <h2 className="font-bold text-[14px]">
-              Email : <span className="text-blue-500"> {userData.email}</span>
+              Email: <span className="text-blue-500">{userData.email}</span>
             </h2>
             <h2 className="font-bold text-[14px]">
-              Phone No :{" "}
-              <span className="text-blue-500"> {userData.phoneNo}</span>
+              Phone No: <span className="text-blue-500">{userData.phoneNo}</span>
             </h2>
             <h2 className="font-bold text-[14px]">
-              Position : <span className="text-blue-500"> {position}</span>
+              Position: <span className="text-blue-500">{position}</span>
             </h2>
             <h2 className="font-bold text-[14px]">
-              InterView Time :{" "}
-              <span className="text-blue-500"> {userData.interViewTime}</span>
+              Interview Time: <span className="text-blue-500">{userData.interviewTime}</span>
             </h2>
-
-            {(position === "developer" || position === "designer") &&
-            position !== "null" ? (
+            {(position === "developer" || position === "designer") && (
               <>
                 <h2 className="font-bold text-[14px]">
-                  Relevant Experience:{" "}
-                  <span className="text-blue-500">
-                    {userData.releventExperience}
-                  </span>
+                  Relevant Experience: <span className="text-blue-500">{userData.relevantExperience}</span>
                 </h2>
                 <h2 className="font-bold text-[14px]">
-                  Portfolio URL:{" "}
-                  <span className="text-blue-500">{userData.portfilioUrl}</span>
+                  Portfolio URL: <span className="text-blue-500">{userData.portfolioUrl}</span>
                 </h2>
               </>
-            ) : null}
-
-            {position === "manager" && position !== "null" && (
+            )}
+            {position === "manager" && (
               <h2 className="font-bold text-[14px]">
-                Management Experience:{" "}
-                <span className="text-blue-500">
-                  {userData.managementExperience}
-                </span>
+                Management Experience: <span className="text-blue-500">{userData.managementExperience}</span>
               </h2>
             )}
-
             <h2 className="font-bold text-[14px]">
-              Additional Skills:{" "}
-              {Object.keys(userData.additionalSkills).map((skill) =>
-                userData.additionalSkills[skill] ? (
+              Additional Skills:
+              {Object.keys(userData.additionalSkills)
+                .filter((skill) => userData.additionalSkills[skill])
+                .map((skill) => (
                   <span key={skill} className="text-blue-500">
                     {skill}{" "}
                   </span>
-                ) : null
-              )}
+                ))}
             </h2>
           </div>
         </div>
